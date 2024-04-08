@@ -1,27 +1,36 @@
 (* 1.1.1 Create a function which calculates sum from 1 to N *)
 
-(* if-else approach *)
-let rec sum_if_else n =
+(* classic *)
+let rec sum n =
   if n = 1 then 1
-  else n + sum_if_else (n - 1)
+  else n + sum (n - 1) 
 
-(* patterns approach *)
-let rec sum_patterns = function
-  | 1 -> 1
-  | n -> n + sum_patterns (n - 1)
+
+(* tail-recursive *)
+let rec sum_tail n =
+  let rec aux n acc =
+    if n = 0
+      then acc
+    else 
+      aux (n - 1) (acc + n)
+  in aux n 0
 
 
 (* 1.1.2 Write a factorial function *)
 
-(* if-else approach *)
-let rec fact_if_else n =
+(* classic *)
+let rec fact n =
   if n = 1 then 1
-  else n * fact_if_else (n - 1)
+  else n * fact (n - 1)
 
-(* patterns approach *)
-let rec fact_patterns = function
-  | 1 -> 1
-  | n -> n * fact_patterns (n - 1)
+(* tail-recursive *)
+let rec fact_tail n =
+  let rec aux n acc =
+    if n = 0
+      then acc
+    else 
+      aux (n - 1) (n * acc)
+  in aux n 1
 
 
 (* 1.2 Create a record of type student which will have following fields 
