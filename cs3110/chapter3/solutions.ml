@@ -30,8 +30,7 @@ let () = assert (concat @@ [] = "")
 
 
 (* Exercise 4: product test *)
-
-(* TODO *)
+(* Testing Topic is ignored *)
 
 (* Exercise 5: patterns *)
 let has_bigred = function
@@ -60,8 +59,7 @@ let sort_desc lst =
 
 
 (* Exercise 7: library test *)
-
-(* TODO *)
+(* Testing Topic is ignored *)
 
 
 (* Exercise 8: library puzzle *)
@@ -71,19 +69,78 @@ let any_zeroes lst = List.exists (fun x ->  x = 0) lst
 
 
 (* Exercise 9: take drop *)
-(* TODO *)
+(* function "from" used from lecture. generates list of i to j sequence *)
+let rec from i j l = if i > j then l else from i (j - 1) (j :: l)
 
+let take n lst = 
+  let rec take_aux n lst = 
+    match lst with
+      (* Continue recursive taking, until n > 0 *)
+      | h::tl when n > 0 -> h::(take_aux (n - 1) tl)
+      (* Stop at the base case *)
+      | _ -> []
+  in take_aux n lst
+
+let drop n lst =
+  let rec drop_acc n lst =
+    match lst with
+      | h::tl when n > 0 -> drop_acc (n - 1) tl
+      | _ -> lst
+    in let result = drop_acc n lst
+  in if result = [] && n > 0 then [] else result
 
 (* Exercise 9: take drop tail *)
-(* TODO *)
+let take_tail n lst = 
+  let rec take_aux n lst lst_acc = 
+    match lst with
+      (* Continue recursive taking, until n > 0 *)
+      | h::tl when n > 0 -> take_aux (n - 1) tl (h::lst_acc)
+      (* Stop at the base case *)
+      | _ -> lst_acc
+  in List.rev @@ take_aux n lst []
 
+(* drop implementation was already a tail recursive. *)
 
 (* Exercise 10: unimodal *)
-(* TODO *)
-
+let is_unimodal (lst : int list): bool =
+  match lst with
+    | [] -> true
+    | h::tl ->
+      let rec is_unimodal_aux lst prev_el is_increasing has_switched =
+        match lst with
+          | [] -> true
+          | h::tl -> 
+            if is_increasing then
+              if prev_el <= h
+                then is_unimodal_aux tl h is_increasing has_switched 
+              else 
+                if has_switched
+                  then false
+                else is_unimodal_aux tl h (not is_increasing) true 
+            else
+              if prev_el >= h
+                then is_unimodal_aux tl h is_increasing has_switched
+              else
+                if has_switched
+                  then false
+                else is_unimodal_aux tl h (not is_increasing) true
+    in is_unimodal_aux tl h true false
 
 (* Exercise 11: powerset *)
-(* TODO *)
+(* After analyzing function recursive aspects, I stated the formula:
+      P({x} ∪ S) = P(S) ∪ {A ∪ {x} | A ∈ P(S)}
+  It can be interpreted as using root of the problem {} set,
+  we can calculate final powerset by assembling it
+  from {}, 1 element, 2 element ... n element powerset.
+*)
+let rec powerset (lst : int list) : int list list =
+  match lst with
+    | [] -> [[]]
+    | h::tl -> 
+      (* Calculate P(S) *)
+      let p = powerset tl
+    (* Calculate  {A ∪ {x} | A ∈ P(S)} and concat with P(S) *)
+    in (List.map (fun x -> h::x) p) @ p
 
 
 (* Exercise 12: print int list rec *)
@@ -147,7 +204,18 @@ let safe_tl = function
 
 
 (* Exercise 16: pokefun *)
-(* TODO *)
+let max_hp (lst : pokemon list) : pokemon option =
+  let rec max_accumulator lst' curr_max = 
+    match lst' with
+      | [] -> curr_max
+      | h::tl ->
+        match curr_max with
+          | None -> max_accumulator tl (Some h)
+          | Some curr ->
+            if h.hp > curr.hp
+              then max_accumulator tl (Some h)
+            else max_accumulator tl curr_max
+  in max_accumulator lst None
 
 
 (* Exercise 17: date before *)
@@ -162,8 +230,18 @@ let is_before date1 date2 =
 
 
 (* Exercise 18: earliest date *)
-(* TODO *)
-
+let earliest dates = 
+  let rec earliest_acc dates' curr_earliest =
+    match dates' with
+    | [] -> curr_earliest
+    | h::tl ->
+      let new_earliest =
+        match curr_earliest with
+          | None -> Some h
+          | Some curr_date ->
+            if is_before h curr_date then Some h else Some curr_date
+      in earliest_acc tl new_earliest
+  in earliest_acc dates None
 
 (* Exercise 19: assoc list *)
 let insert k v lst = (k, v) :: lst
@@ -201,15 +279,19 @@ let seven_of_spades = { suit = Spade; rank = Number 7 }
 
 (* Exercise 21: matching *)
 (* Some x :: tl *)
+[None, Some 1]
 
 (* [Some 3110; None] *)
+[None, Some 1]
 
 (* [Some x; _] *)
+[None, Some 1]
 
 (* h1 :: h2 :: tl *)
+[Some 1]
 
 (* h :: tl *)
-
+(* Impossible to bypass non empty list with this pattern *)
 
 (* Exercise 22: quadrant *)
 type quad = I | II | III | IV
