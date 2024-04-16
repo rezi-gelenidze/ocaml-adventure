@@ -378,6 +378,48 @@ let list_max_string (lst : int list) : string =
 (* Testing Topic is ignored *)
 
 (* Exercise 29: is_bst *)
+(* 
+  Invariant: For any node n, every node in the left subtree 
+  of n has a value less than n's value, and every node in 
+  the right subtree of n has a value greater than n's value. 
+*)
+type ('a, 'b) bst =
+  | Leaf
+  | Node of ('a * 'b) * ('a, 'b) bst * ('a, 'b) bst
+
+type 'a bst_result =
+  | Empty
+  | Unsatisfied
+  | Satisfied of 'a * 'a
+
+let rec is_bst_aux tree curr_min curr_max =
+  match tree with
+    | Leaf -> Empty
+    | Node ((k, _), l, r) ->
+      (* check min and max bounds *)
+      let left_valid = match curr_min with
+        | Some min -> k > min
+        | None -> true
+      in 
+      let right_valid = match curr_max with
+        | Some max -> k < max
+        | None -> true
+      in
+      if left_valid && right_valid then
+        (* Consider all cases combination of children bst results *)
+        match (is_bst_aux l curr_min (Some k), is_bst_aux r (Some k) curr_max) with
+          | (Satisfied (l_min, _), Satisfied (_, r_max)) -> Satisfied (l_min, r_max)
+          | (Empty, Satisfied (_, r_max)) -> Satisfied (k, r_max)
+          | (Satisfied (l_min, _), Empty) -> Satisfied (l_min, k)
+          | (Empty, Empty) -> Satisfied (k, k)
+          | _ -> Unsatisfied
+      else
+        Unsatisfied
+
+let is_bst tree =
+  match is_bst_aux tree None None with
+    | Satisfied _ -> true
+    | _ -> false
 
 (* Exercise 30: quadrant_poly *)
 let sign_poly x =
