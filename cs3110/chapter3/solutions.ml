@@ -279,16 +279,16 @@ let seven_of_spades = { suit = Spade; rank = Number 7 }
 
 (* Exercise 21: matching *)
 (* Some x :: tl *)
-[None, Some 1]
+(* [None, Some 1] *)
 
 (* [Some 3110; None] *)
-[None, Some 1]
+(* [None, Some 1] *)
 
 (* [Some x; _] *)
-[None, Some 1]
+(* [None, Some 1] *)
 
 (* h1 :: h2 :: tl *)
-[Some 1]
+(* [Some 1] *)
 
 (* h :: tl *)
 (* Impossible to bypass non empty list with this pattern *)
@@ -324,24 +324,13 @@ let quadrant_when : int*int -> quad option = function
 
 
 (* Exercise 24: depth *)
-(* TODO *)
-
-
 (* Exercise 25: shape *)
-(* TODO *)
-
-
 (* Exercise 26: list max exn *)
-
-
 (* Exercise 27: lsit max exn string *)
 
 
 (* Exercise 28: list max exn ounit *)
-
+(* Testing Topic is ignored *)
 
 (* Exercise 29: is_bst *)
-
-
 (* Exercise 30: quadrant_poly *)
-(* TODO *)
