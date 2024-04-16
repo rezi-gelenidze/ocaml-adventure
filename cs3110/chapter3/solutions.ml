@@ -325,9 +325,37 @@ let quadrant_when : int*int -> quad option = function
 
 (* Exercise 24: depth *)
 (* Exercise 25: shape *)
-(* Exercise 26: list max exn *)
-(* Exercise 27: lsit max exn string *)
 
+(* Exercise 26: list max exn *)
+let list_max (lst : int list) : int =
+  match lst with
+    | [] -> raise (Failure "empty")
+    | fst::tail ->
+      let rec max_accumulator lst' current_max =
+        match lst' with
+          | [] -> current_max
+          | h::lst'' ->
+            let new_max = 
+              if h > current_max then h 
+              else current_max
+            in max_accumulator lst'' new_max
+    in max_accumulator tail fst
+  
+(* Exercise 27: lsit max exn string *)
+let list_max_string (lst : int list) : string =
+  match lst with
+    | [] -> "empty"
+    | h::tl ->
+      let rec max_accumulator lst' current_max =
+        match lst' with
+          | [] -> current_max
+          | h::lst'' ->
+            let new_max = 
+              if h > current_max then h 
+              else current_max
+            in max_accumulator lst'' new_max
+  in string_of_int @@ max_accumulator lst 0
+  
 
 (* Exercise 28: list max exn ounit *)
 (* Testing Topic is ignored *)
