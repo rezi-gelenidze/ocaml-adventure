@@ -324,7 +324,23 @@ let quadrant_when : int*int -> quad option = function
 
 
 (* Exercise 24: depth *)
+type 'a tree = Leaf | Node of 'a * 'a tree  * 'a tree
+
+let rec depth tree =
+  match tree with
+    | Leaf -> 0
+    | Node (_, l, r) ->
+      1 + max (depth l) (depth r)
+
+
 (* Exercise 25: shape *)
+let rec same_shape tree1 tree2 = 
+  match (tree1, tree2) with
+    | (Leaf, Leaf) -> true
+    | (Node (_, ll, lr), Node (_, rl, rr)) ->
+      (same_shape ll rl) && (same_shape lr rr)
+    | _ -> false
+
 
 (* Exercise 26: list max exn *)
 let list_max (lst : int list) : int =
@@ -341,6 +357,7 @@ let list_max (lst : int list) : int =
             in max_accumulator lst'' new_max
     in max_accumulator tail fst
   
+
 (* Exercise 27: lsit max exn string *)
 let list_max_string (lst : int list) : string =
   match lst with
@@ -361,4 +378,17 @@ let list_max_string (lst : int list) : string =
 (* Testing Topic is ignored *)
 
 (* Exercise 29: is_bst *)
+
 (* Exercise 30: quadrant_poly *)
+let sign_poly x =
+  if x > 0  then `Pos
+  else if x < 0 then `Neg
+  else `Zero
+
+let quadrant_poly = fun (x,y) ->
+  match sign_poly x, sign_poly y with
+    | `Pos, `Pos -> Some `I
+    | `Neg, `Pos -> Some `II
+    | `Neg, `Neg -> Some `III
+    | `Pos, `Neg -> Some `IV
+    | _ -> None
