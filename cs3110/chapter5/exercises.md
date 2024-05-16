@@ -1,9 +1,3 @@
-## 5.11. Exercises
-
-Solutions to most exercises are [available](https://github.com/cs3110/textbook-solutions). Fall 2022 is the first public release of these solutions. Though they have been available to Cornell students for a few years, it is inevitable that wider circulation will reveal improvements that could be made. We are happy to add or correct solutions. Please make contributions through GitHub.
-
-___
-
 **Exercise: complex synonym \[★\]**
 
 Here is a module type for complex numbers, which have a real and imaginary component:
