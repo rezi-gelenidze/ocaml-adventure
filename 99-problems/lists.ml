@@ -257,6 +257,31 @@ let permutation lst =
 
 (* Generate the Combinations of K Distinct Objects Chosen From the N Elements of a List *)
 (* Group the Elements of a Set Into Disjoint Subsets *)
-(* Sorting a List of Lists According to Length of Sublists *)
 
 (* ------------------------ END -----------------------*)
+
+
+(* Sorting a List of Lists According to Length of Sublists *)
+(* 1. Length Sort *)
+let predicate l1 l2 = compare (List.length l1) (List.length l2)
+let length_sort lst = List.sort predicate lst
+
+(* 2. Frequency Sort *)
+(* Below sort predicate is not very efficient, but problem does not require time complexity reduction *)
+let frequency_sort lst = 
+  (* Define helper for counting given length occurances in a list *)
+  let count_occurances length =
+    let rec aux acc = function
+      | [] -> acc
+      | h::tl ->
+        if List.length h = length 
+          then aux (acc + 1) tl
+          else aux acc tl
+    in aux 0 lst
+  in
+  (* Define predicate, comparing number of length occurances *)
+  let predicate l1 l2 = 
+    compare (count_occurances (List.length l1)) (count_occurances (List.length l2)) 
+  
+  (* Finally, use List sort with our predicate *)
+  in List.sort predicate lst
