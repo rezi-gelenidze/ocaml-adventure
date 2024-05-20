@@ -1,7 +1,6 @@
 (* Good resorce to learn Binary Search Tree
   https://www.geeksforgeeks.org/binary-search-tree-data-structure/ *)
 
-
 (* Define a signature to specify mandatory methods for any tree structure *)
 module type Tree = sig
   type 'a tree
@@ -138,20 +137,25 @@ module BinarySearchTree : Tree = struct
   (* Use instertion method iteratively and get a resulting tree *)
   let from_list lst = List.fold_left insert Leaf lst
 
-  let rec sorted_list_to_bst lst l r =
-    if l > r then Leaf
-    else
-      let m = (l + r) / 2 in
-      let node_value = List.nth lst m in
-      Node (
-        node_value,
-        sorted_list_to_bst lst l (m - 1),  (* Recurse on the left half *)
-        sorted_list_to_bst lst (m + 1) r  (* Recurse on the right half *)
-      )
-
+  (* 
+    Convert a list to BST as balanced as possible.
+    First, we sort and remove duplicates and then
+    recursivelly append middle element to the bst to
+    balance the resulting tree.
+  *)
   let from_list_to_balanced_tree lst =
     let sorted_unique = List.sort_uniq compare lst in 
-    sorted_list_to_bst sorted_unique 0 (List.length sorted_unique - 1)
+    let rec aux lst l r =
+      if l > r then Leaf
+      else
+        let m = (l + r) / 2 in
+        let node_value = List.nth lst m in
+        Node (
+          node_value,
+          aux lst l (m - 1),  (* Recurse on the left half *)
+          aux lst (m + 1) r  (* Recurse on the right half *)
+        )
+    in aux sorted_unique 0 (List.length sorted_unique - 1)
 
   (* Convert a tree into a list, by preserving sorted sequence *)
   let to_list tree =
@@ -221,4 +225,35 @@ module BinarySearchTree : Tree = struct
         aux (prefix ^ "├── ") l;
         aux (prefix ^ "└── ") r
     in aux "" tree
+end
+
+
+module AVLTree = struct
+  (* Information, left subtree, right subtree & height of a node *)
+  type 'a avl_tree =
+  | Leaf
+  | Node of 'a * 'a avl_tree * 'a avl_tree * int
+
+  (* Extracts a height of a given node *)
+  let height = function
+    | Leaf -> 0
+    | Node (_, _, _, h) -> h
+
+  (* Recalculate a height *)
+  let update_height l r =
+    1 + max (height l) (height r)
+
+  (* Calculates a balance factor, which is left subtree height - right subtree height *)
+  let balance_factor = function
+    | Leaf -> 0
+    | Node (_, l, r, _) ->
+      let hl = match l with
+        | Leaf -> 0
+        | Node (_, _, _, h) -> h
+      in
+      let hr = match r with
+        | Leaf -> 0
+        | Node (_, _, _, h) -> h
+    in
+    hl - hr
 end
